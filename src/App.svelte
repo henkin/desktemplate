@@ -9,13 +9,6 @@
 	
 	// Tab management
 	let activeTab = 'todos'; // 'todos' or 'files'
-
-	// Close the window
-	function closeWindow() {
-		if (window.api && window.api.close) {
-			window.api.close();
-		}
-	}
 </script>
 
 <style>
@@ -25,35 +18,12 @@
 	.no-drag {
 		-webkit-app-region: no-drag;
 	}
-	.close-button {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		width: 24px;
-		height: 24px;
-		border-radius: 50%;
-		background-color: rgba(255, 75, 75, 0.8);
-		color: white;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 14px;
-		cursor: pointer;
-		z-index: 100;
-		transition: background-color 0.2s;
-	}
-	.close-button:hover {
-		background-color: rgba(255, 75, 75, 1);
-	}
 	:global(body) {
 		background: transparent !important;
 	}
 </style>
 
 <main class="min-h-screen bg-transparent text-white flex flex-col rounded-l-lg overflow-hidden shadow-lg relative">
-	<!-- Close button -->
-	<button class="close-button no-drag" on:click={closeWindow}>×</button>
-	
 	<!-- Header - Can drag window from here -->
 	<header class="p-6 bg-slate-800/80 shadow-md draggable">
 		<h1 class="text-3xl font-bold text-center">Todo List Application</h1>

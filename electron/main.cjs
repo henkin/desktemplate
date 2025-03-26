@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
 const { log } = require('console')
-const { app, BrowserWindow, screen, ipcMain } = require('electron')
+const { app, BrowserWindow, screen, ipcMain, globalShortcut } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const http = require('http')
@@ -69,7 +69,8 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
-            contextIsolation: true
+            contextIsolation: true,
+            devTools: true
         }
     })
 
@@ -93,11 +94,9 @@ const createWindow = () => {
         // if your vite app is running on a different port, change it here
         mainWindow.loadURL('http://localhost:5173/');
 
-        // Open the DevTools.
-        mainWindow.webContents.on("did-frame-finish-load", () => {
-            mainWindow.webContents.openDevTools();
-        });
-
+        // DevTools should start closed - remove the auto-open
+        // MainWindow will still have DevTools available
+        
         log('Electron running in dev mode: 🧪')
 
     } else {
@@ -110,6 +109,15 @@ const createWindow = () => {
     
     // Set up Socket.IO server
     setupSocketIO();
+    
+    // Register F12 shortcut to toggle DevTools
+    globalShortcut.register('F12', () => {
+        if (mainWindow.webContents.isDevToolsOpened()) {
+            mainWindow.webContents.closeDevTools();
+        } else {
+            mainWindow.webContents.openDevTools();
+        }
+    });
 }
 
 // Set up Socket.IO server
@@ -180,7 +188,16 @@ function updateFilesList() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+    createWindow();
+    
+    // Register Command+Q shortcut for macOS to quit the app
+    if (process.platform === 'darwin') {
+        globalShortcut.register('CommandOrControl+Q', () => {
+            app.quit();
+        });
+    }
+});
 
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
@@ -191,12 +208,16 @@ app.on('activate', () => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-// app.on('window-all-closed', () => {
-//     if (process.platform !== 'darwin') app.quit()
-// })
+app.on('window-all-closed', () => {
+    // We want to quit on all platforms when all windows are closed
+    app.quit();
+});
 
 // Clean up resources when app is about to quit
 app.on('will-quit', () => {
+    // Unregister all shortcuts
+    globalShortcut.unregisterAll();
+    
     if (watcher) {
         watcher.close();
     }

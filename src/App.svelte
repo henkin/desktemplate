@@ -1,10 +1,14 @@
 <script>
 	import Todo from "./lib/Todo.svelte";
+	import Files from "./lib/Files.svelte";
 	
 	// Get versions from the Electron API
 	const nodeVersion = window.api ? window.api.node() : 'N/A';
 	const chromeVersion = window.api ? window.api.chrome() : 'N/A';
 	const electronVersion = window.api ? window.api.electron() : 'N/A';
+	
+	// Tab management
+	let activeTab = 'todos'; // 'todos' or 'files'
 </script>
 
 <main class="min-h-screen bg-slate-900 text-white flex flex-col">
@@ -14,9 +18,31 @@
 		<p class="text-center text-slate-400 mt-2">A simple task management template</p>
 	</header>
 	
+	<!-- Tab Navigation -->
+	<div class="bg-slate-800 px-6 pb-0 pt-2 border-b border-slate-700">
+		<div class="flex space-x-4 max-w-md mx-auto">
+			<button 
+				class="px-4 py-2 font-medium {activeTab === 'todos' ? 'text-white border-b-2 border-indigo-500' : 'text-slate-400 hover:text-white'}"
+				on:click={() => activeTab = 'todos'}
+			>
+				Todos
+			</button>
+			<button 
+				class="px-4 py-2 font-medium {activeTab === 'files' ? 'text-white border-b-2 border-indigo-500' : 'text-slate-400 hover:text-white'}"
+				on:click={() => activeTab = 'files'}
+			>
+				Files
+			</button>
+		</div>
+	</div>
+	
 	<!-- Main Content -->
 	<section class="flex-grow flex items-start justify-center p-6">
-		<Todo />
+		{#if activeTab === 'todos'}
+			<Todo />
+		{:else if activeTab === 'files'}
+			<Files />
+		{/if}
 	</section>
 
 	<!-- Footer -->

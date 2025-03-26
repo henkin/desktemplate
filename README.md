@@ -1,7 +1,17 @@
-# Vite + Svelte + Electron + Tailwind
+# Todo List Template App
 
 ## 🚀 Description
-The "Vite + Svelte + Electron + Tailwind" repository is a powerful template designed to streamline the development process of modern applications. By leveraging the combined strengths of Vite, Svelte, Electron, and Tailwind CSS, this template provides an efficient and flexible foundation for building cross-platform desktop applications with a delightful user interface.
+This Todo List Template App is a powerful yet simple task management application built using Vite, Svelte, Electron, and Tailwind CSS. It serves as a template for creating cross-platform desktop applications with a focus on user experience and functionality.
+
+## ✨ Features
+- Create, read, update, and delete tasks
+- Filter tasks by status (all, active, completed)
+- Mark tasks as complete/incomplete
+- Clear all completed tasks at once
+- Toggle all tasks complete/incomplete
+- Edit task text with double-click
+- Persistent storage using localStorage
+- Beautiful and responsive user interface
 
 ## 🧋 Technologies
 [Vite](https://vitejs.dev/): Vite is a lightning-fast build tool for web applications. It optimizes the development experience with near-instantaneous hot module replacement (HMR) and an efficient build process.
@@ -17,7 +27,7 @@ To get started with building your app using this template, follow these simple s
 
 Get a copy of this template by running the following command: 
 ```bash
-npx degit feernandobraga/vitesvelctron my-app-name
+npx degit feernandobraga/vitesvelctron my-todo-app
 ```
 Alternatively, you can clone the repo instead:
 ```bash
@@ -26,7 +36,7 @@ git clone https://github.com/feernandobraga/vitesvelctron
 
 Next, cd into the project directory and install the dependencies:
 ```bash
-cd my-app-name
+cd my-todo-app
 npm install
 ```
 
@@ -39,6 +49,13 @@ When your app is ready, you can build by running the following command:
 ```bash
 npm run make
 ```
+
+## 🔧 Customization
+The Todo List template can be easily customized to fit your needs:
+
+1. Modify the `src/lib/Todo.svelte` component to adjust functionality
+2. Edit the styles in the component to match your design preferences
+3. Extend the application with additional features by creating new components
 
 ## 🍑 Donation
 If you are feeling generous or if you found this template helpful because it saved you a lot of time and headaches, you can contribute by buying me a coffee!

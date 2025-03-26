@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
 const { log } = require('console')
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, screen, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const http = require('http')
@@ -48,16 +48,44 @@ function getDirectoryFiles(directory) {
     }
 }
 
+// Handle close window event from renderer
+ipcMain.on('close-window', () => {
+    if (mainWindow) {
+        mainWindow.close();
+    }
+});
+
 const createWindow = () => {
     
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 1300,
-        height: 600,
+        width: 450,
+        height: 800,
+        transparent: true,
+        frame: false,
+        alwaysOnTop: true,
+        hasShadow: true,
+        backgroundColor: '#00000000', // Transparent background
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: false,
+            contextIsolation: true
         }
     })
+
+    // Position window to the right of the screen
+    const primaryDisplay = screen.getPrimaryDisplay()
+    const { width } = primaryDisplay.workAreaSize
+    mainWindow.setPosition(width - 450, 0)
+
+    // Enable drag regions
+    if (!isDevEnvironment) {
+        // For production, we need to set it after the app is loaded
+        mainWindow.webContents.once('did-finish-load', () => {
+            // The header will be draggable
+            mainWindow.webContents.send('set-draggable');
+        });
+    }
 
     // define how electron will load the app
     if (isDevEnvironment) {
